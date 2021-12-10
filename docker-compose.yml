@@ -1,0 +1,50 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:1.7.9
+    container_name: nginx
+  postgres:
+    image: postgres:9.5
+    container_name: "postgres"
+    restart: always
+    environment:
+      - "POSTGRES_USER=gogs"
+      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+      - "POSTGRES_DB=gogs"
+    volumes:
+      - "./data/postgres:/var/lib/postgresql/data"
+    networks:
+      - dev-tools
+  gogs:
+    container_name: "gogs"
+    image: gogs/gogs:latest
+    restart: always
+    ports:
+      - "10022:22"
+      - "8085:3000"
+    links:
+      - postgres
+    environment:
+      - "RUN_CROND=true"
+    networks:
+      - dev-tools
+    volumes:
+      - "./data/gogs:/data"
+    depends_on:
+      - postgres
+  team-city:
+    image: jetbrains/teamcity-server:latest
+    container_name: "teamcity"
+    restart: always
+    ports:
+      - "8111:8111"
+      - "8222:8222"
+    networks:
+      - dev-tools
+    volumes:
+      - "./data/teamcity:/data"
+    depends_on:
+      - postgres
+networks:
+  dev-tools:
+    driver: bridge

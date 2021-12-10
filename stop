@@ -1,0 +1,13 @@
+#!/bin/bash
+red=`tput setaf 1`
+green=`tput setaf 2`
+nc=`tput sgr0`
+
+POSTGRES_PASSWORD=""
+
+if [ -z `docker ps -q --no-trunc | grep $(docker-compose ps -q gogs)` ]; then
+  echo "${red}[ERROR]${nc} 'dev-tools' are not running nothing to do."
+else
+  printf "${green}[STOPPING]${nc} docker-compose down -d"
+  docker-compose down
+fi

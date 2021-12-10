@@ -1,0 +1,6 @@
+/data/gogs/*
+!/data/gogs/.gitkeep
+/data/postgresql/*
+!/data/postgresql/.gitkeep
+*-password.txt
+scratch.txt
